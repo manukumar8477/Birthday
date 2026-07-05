@@ -478,10 +478,8 @@ function VideoCard({ url, title, comment, isFeatured = false }) {
   )
 }
 
-const getMusicIcon = (isPlaying) => (isPlaying ? '🎵' : '▶️')
-
 function App() {
-  const [view, setView] = useState('welcome') // State router: 'welcome', 'journey', 'celebration'
+  const [view, setView] = useState('intro') // State router: 'intro', 'welcome', 'journey', 'celebration'
   const [isWelcomeMusicPlaying, setIsWelcomeMusicPlaying] = useState(false) // Play/Pause state for front page song
   const [isJourneyMusicPlaying, setIsJourneyMusicPlaying] = useState(false) // Play/Pause state for second page song
   const [currentCelebrationSong, setCurrentCelebrationSong] = useState('soniye') // 'soniye' or 'hath'
@@ -496,6 +494,13 @@ function App() {
   const [revealStep, setRevealStep] = useState(0)
   const [typedTitle, setTypedTitle] = useState('')
   
+  // Intro Page States
+  const [introRevealStep, setIntroRevealStep] = useState(0)
+  const [giftOpened, setGiftOpened] = useState(false)
+  const [showMusicPopup, setShowMusicPopup] = useState(false)
+  const [giftExploded, setGiftExploded] = useState(false)
+  const [cursorTrail, setCursorTrail] = useState([])
+
   const welcomeAudioRef = useRef(null)
   const journeyAudioRef = useRef(null)
   const celebrationAudioRef = useRef(null)
@@ -505,8 +510,61 @@ function App() {
 
   const mainTitleText = "Happy Birthday Kaifreen Chauhan 🎂"
 
+  // Cursor Trail Tracking Effect for Intro Page
+  useEffect(() => {
+    if (view !== 'intro') return
+
+    const handleMouseMove = (e) => {
+      const heart = {
+        id: Math.random(),
+        x: e.clientX,
+        y: e.clientY,
+        size: Math.random() * 12 + 8,
+        color: ['#ff4d6d', '#ff8fa3', '#c084fc', '#ffd700'][Math.floor(Math.random() * 4)],
+        rotation: Math.random() * 360,
+        opacity: 1
+      }
+      setCursorTrail((prev) => [...prev.slice(-30), heart])
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [view])
+
+  // Fade out cursor trail hearts
+  useEffect(() => {
+    if (view !== 'intro' || cursorTrail.length === 0) return
+
+    const interval = setInterval(() => {
+      setCursorTrail((prev) => 
+        prev
+          .map((h) => ({ ...h, opacity: h.opacity - 0.05 }))
+          .filter((h) => h.opacity > 0)
+      )
+    }, 50)
+
+    return () => clearInterval(interval)
+  }, [view, cursorTrail.length])
+
+  // Sequential Reveal steps for Intro Section content on load
+  useEffect(() => {
+    if (view !== 'intro') return
+
+    const timeouts = [
+      setTimeout(() => setIntroRevealStep(1), 1000),  // Show Line 1
+      setTimeout(() => setIntroRevealStep(2), 2600),  // Show Line 2
+      setTimeout(() => setIntroRevealStep(3), 4200),  // Show Line 3
+      setTimeout(() => setIntroRevealStep(4), 5800),  // Show Quote block
+      setTimeout(() => setIntroRevealStep(5), 7800),  // Show wishes list
+      setTimeout(() => setIntroRevealStep(6), 10000), // Show YOU banner
+      setTimeout(() => setIntroRevealStep(7), 11500)  // Show Gift container
+    ]
+    return () => timeouts.forEach(clearTimeout)
+  }, [view])
+
   // Strict-mode safe and race-free typewriter animation for Hero section
   useEffect(() => {
+    if (view !== 'welcome') return
     const interval = setInterval(() => {
       setTypedTitle((prev) => {
         if (prev.length < mainTitleText.length) {
@@ -517,49 +575,52 @@ function App() {
       })
     }, 65)
     return () => clearInterval(interval)
-  }, [])
+  }, [view])
 
   // Sequential Reveal steps for Hero Section content on load
   useEffect(() => {
+    if (view !== 'welcome') return
     const timeouts = [
-      setTimeout(() => setRevealStep(1), 2200), // Show Line 1
-      setTimeout(() => setRevealStep(2), 3500), // Show Line 2
-      setTimeout(() => setRevealStep(3), 4800), // Show Line 3
-      setTimeout(() => setRevealStep(4), 6000), // Show Punjabi 1
-      setTimeout(() => setRevealStep(5), 7000), // Show Punjabi 2
-      setTimeout(() => setRevealStep(6), 8000), // Show Punjabi 3
-      setTimeout(() => setRevealStep(7), 9000), // Show Punjabi 4
-      setTimeout(() => setRevealStep(8), 10000) // Show button, comment box, mini cake
+      setTimeout(() => setRevealStep(1), 500),
+      setTimeout(() => setRevealStep(2), 1800),
+      setTimeout(() => setRevealStep(3), 3100),
+      setTimeout(() => setRevealStep(4), 4400),
+      setTimeout(() => setRevealStep(5), 5400),
+      setTimeout(() => setRevealStep(6), 6400),
+      setTimeout(() => setRevealStep(7), 7400),
+      setTimeout(() => setRevealStep(8), 8400)
     ]
     return () => timeouts.forEach(clearTimeout)
-  }, [])
+  }, [view])
 
   // Welcome Front Page Music Player Manager (Autoplay, Loop, and Navigation Cleanup)
   useEffect(() => {
-    if (view === 'welcome') {
-      const audio = new Audio('/Music/HappyBirthday.mp3')
-      audio.loop = true
-      welcomeAudioRef.current = audio
+    if (view === 'welcome' || view === 'intro') {
+      if (!welcomeAudioRef.current) {
+        const audio = new Audio('/Music/HappyBirthday.mp3')
+        audio.loop = true
+        welcomeAudioRef.current = audio
+      }
 
-      // Autoplay attempt (might fail if user hasn't interacted yet; catches error gracefully)
-      audio.play()
-        .then(() => {
-          setIsWelcomeMusicPlaying(true)
-        })
-        .catch((err) => {
-          console.log('Autoplay blocked by browser. User interaction needed.', err)
+      if (isWelcomeMusicPlaying) {
+        welcomeAudioRef.current.play().catch((err) => {
+          console.log('Playback error/blocked:', err)
           setIsWelcomeMusicPlaying(false)
         })
+      }
 
-      // Cleanup: stop, wipe source, and reset refs when view changes or component unmounts
       return () => {
-        audio.pause()
-        audio.src = ''
-        welcomeAudioRef.current = null
-        setIsWelcomeMusicPlaying(false)
+        // Only stop and cleanup when navigating away from BOTH welcome and intro pages
+        if (view !== 'welcome' && view !== 'intro') {
+          if (welcomeAudioRef.current) {
+            welcomeAudioRef.current.pause()
+            welcomeAudioRef.current.src = ''
+            welcomeAudioRef.current = null
+          }
+          setIsWelcomeMusicPlaying(false)
+        }
       }
     } else {
-      // Safety stop if somehow active outside landing page
       if (welcomeAudioRef.current) {
         welcomeAudioRef.current.pause()
         welcomeAudioRef.current.src = ''
@@ -567,7 +628,7 @@ function App() {
       }
       setIsWelcomeMusicPlaying(false)
     }
-  }, [view])
+  }, [view, isWelcomeMusicPlaying])
 
   // Journey Second Page Music Player Manager (Autoplay, Loop, and Navigation Cleanup)
   useEffect(() => {
@@ -850,7 +911,7 @@ function App() {
 
   // Confetti/Sparkles/Hearts Constant Canvas Engine
   useEffect(() => {
-    const shouldRun = view === 'welcome' || (view === 'celebration' && cakeCut)
+    const shouldRun = view === 'welcome' || view === 'intro' || (view === 'celebration' && cakeCut)
     
     if (!shouldRun) {
       const canvas = canvasRef.current
@@ -984,7 +1045,7 @@ function App() {
     setTimeout(() => {
       setKnifeAnimating(false)
       setCakeCut(true)
-      setShowCelebrationSequence(true) // Activate 30-second text fireworks sequence!
+      setShowCelebrationSequence(true) // Activate 45-second text fireworks sequence!
 
       if (window.triggerBurst) {
         window.triggerBurst()
@@ -1026,6 +1087,28 @@ function App() {
     }
   }
 
+  const handleGiftClick = () => {
+    if (giftOpened) return
+    setGiftOpened(true)
+    setShowMusicPopup(true)
+  }
+
+  const handleStartMusicClick = () => {
+    setShowMusicPopup(false)
+    setGiftExploded(true)
+    setIsWelcomeMusicPlaying(true)
+
+    // Trigger canvas explosion
+    if (window.triggerBurst) {
+      window.triggerBurst()
+    }
+
+    // Auto-transition to welcome page after 3.2 seconds
+    setTimeout(() => {
+      setView('welcome')
+    }, 3200)
+  }
+
   return (
     <>
       {/* Confetti & Floating Hearts canvas layer */}
@@ -1049,7 +1132,7 @@ function App() {
       </div>
 
       {/* Premium Navigation Header (Silent pages - no music player except when on timeline or celebration page) */}
-      {view !== 'welcome' && (
+      {view !== 'welcome' && view !== 'intro' && (
         <nav className="glass-nav">
           <div className="nav-container">
             <span className="nav-logo" onClick={() => setView('welcome')}>Kaifreen 💖</span>
@@ -1078,8 +1161,8 @@ function App() {
                   title={isJourneyMusicPlaying ? 'Stop Timeline Music' : 'Play Timeline Music'}
                   aria-label={isJourneyMusicPlaying ? 'Stop Timeline Music' : 'Play Timeline Music'}
                 >
-                  <span className="music-icon">{getMusicIcon(isJourneyMusicPlaying)}</span>
-                  <span className="music-text" />
+                  <span className="music-icon">{isJourneyMusicPlaying ? '⏸️' : '▶️'}</span>
+                  <span className="music-text">{isJourneyMusicPlaying ? 'Your Thoughts 🎵' : 'Music Stopped 🔇'}</span>
                 </button>
               </div>
             )}
@@ -1094,13 +1177,199 @@ function App() {
                   title={isCelebrationMusicPlaying ? 'Stop Celebration Music' : 'Play Celebration Music'}
                   aria-label={isCelebrationMusicPlaying ? 'Stop Celebration Music' : 'Play Celebration Music'}
                 >
-                  <span className="music-icon">{getMusicIcon(isCelebrationMusicPlaying)}</span>
-                  <span className="music-text" />
+                  <span className="music-icon">{isCelebrationMusicPlaying ? '⏸️' : '▶️'}</span>
+                  <span className="music-text">
+                    {isCelebrationMusicPlaying 
+                      ? (currentCelebrationSong === 'soniye' ? 'Soniye Birthday 🎵' : 'Hath Fadke 🎵') 
+                      : 'Music Stopped 🔇'}
+                  </span>
                 </button>
               </div>
             )}
           </div>
         </nav>
+      )}
+
+      {/* Magical Premium Birthday Welcome Page (Intro Page) */}
+      {view === 'intro' && (
+        <div className="intro-page">
+          {/* Twinkling Moon */}
+          <div className="intro-moon">🌙</div>
+
+          {/* Twinkling Star Elements */}
+          <div className="intro-stars" aria-hidden="true">
+            {Array.from({ length: 45 }).map((_, i) => (
+              <span
+                key={i}
+                className="intro-star"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 5}s`,
+                  animationDuration: `${Math.random() * 4 + 2}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Hearts / Roses / Butterflies / Sparkles floating layer */}
+          <div className="intro-floating-elements" aria-hidden="true">
+            {Array.from({ length: 15 }).map((_, i) => {
+              const emojis = ['💖', '🌹', '🦋', '✨', '🌸']
+              return (
+                <span
+                  key={i}
+                  className="intro-floating-emoji"
+                  style={{
+                    left: `${Math.random() * 90 + 5}%`,
+                    animationDelay: `${Math.random() * 10}s`,
+                    animationDuration: `${Math.random() * 12 + 8}s`,
+                    fontSize: `${Math.random() * 1.5 + 1}rem`
+                  }}
+                >
+                  {emojis[i % emojis.length]}
+                </span>
+              )
+            })}
+          </div>
+
+          {/* Cursor Trail Hearts */}
+          {cursorTrail.map((heart) => (
+            <span
+              key={heart.id}
+              className="intro-heart-trail"
+              style={{
+                left: `${heart.x}px`,
+                top: `${heart.y}px`,
+                color: heart.color,
+                opacity: heart.opacity,
+                transform: `translate(-50%, -50%) rotate(${heart.rotation}deg) scale(${heart.opacity})`
+              }}
+            >
+              ❤️
+            </span>
+          ))}
+
+          {/* Cinematic Parallax Cosmic Backdrop Glow */}
+          <div className="intro-bg-glow" />
+
+          {/* Main Cinematic Text Content */}
+          <div className="intro-content-container">
+            {introRevealStep >= 1 && (
+              <h1 className="intro-main-title animate-fade-in">
+                ✨ Today is not just another day... ✨
+              </h1>
+            )}
+            
+            {introRevealStep >= 2 && (
+              <h2 className="intro-subtitle animate-fade-in pink-glow">
+                💖 Today is the most special day because the world's most special girl was born. 💖
+              </h2>
+            )}
+
+            {introRevealStep >= 3 && (
+              <h2 className="intro-title-celebrate animate-fade-in gold-glow">
+                🎂 Happy Birthday to the most beautiful soul! 🎂
+              </h2>
+            )}
+
+            {introRevealStep >= 4 && (
+              <div className="intro-quote-card animate-fade-in">
+                <p>
+                  "Your smile makes every moment brighter, your kindness makes every heart happier, and today is all about celebrating you."
+                </p>
+              </div>
+            )}
+
+            {introRevealStep >= 5 && (
+              <div className="intro-blessings-list animate-fade-in">
+                <p className="intro-blessing-item">✨ May every dream you wish for come true.</p>
+                <p className="intro-blessing-item">✨ May every smile stay forever on your face.</p>
+                <p className="intro-blessing-item">✨ May every moment of your life be filled with happiness, love, and endless blessings.</p>
+              </div>
+            )}
+
+            {introRevealStep >= 6 && (
+              <h3 className="intro-you-banner animate-fade-in">
+                💝 Today, let's celebrate someone truly unforgettable... <span className="you-highlight">YOU!</span>
+              </h3>
+            )}
+
+            {/* Gift Box Interaction Section */}
+            {introRevealStep >= 7 && (
+              <div className={`intro-gift-section ${giftExploded ? 'gift-exploded-fade' : ''}`}>
+                <div className="gift-box-wrapper">
+                  <div 
+                    className={`gift-box ${giftOpened ? 'opened' : ''}`} 
+                    onClick={handleGiftClick}
+                    title="Tap to open the birthday surprise!"
+                  >
+                    <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="giftBodyGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#db2777" />
+                          <stop offset="100%" stopColor="#9d174d" />
+                        </linearGradient>
+                        <linearGradient id="giftLidGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#f472b6" />
+                          <stop offset="100%" stopColor="#be185d" />
+                        </linearGradient>
+                        <linearGradient id="giftRibbonGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#fbbf24" />
+                          <stop offset="100%" stopColor="#d97706" />
+                        </linearGradient>
+                        <filter id="giftGlow">
+                          <feGaussianBlur stdDeviation="8" result="blur" />
+                          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                      </defs>
+                      <rect x="15" y="45" width="90" height="70" rx="10" fill="#db2777" opacity="0.3" filter="url(#giftGlow)" />
+                      <g className="gift-lid-group">
+                        <rect x="10" y="32" width="100" height="20" rx="6" fill="url(#giftLidGrad)" stroke="#fda4af" strokeWidth="1.5" />
+                        <rect x="48" y="32" width="24" height="20" fill="url(#giftRibbonGrad)" />
+                      </g>
+                      <rect x="18" y="52" width="84" height="58" rx="8" fill="url(#giftBodyGrad)" stroke="#f472b6" strokeWidth="1.5" />
+                      <rect x="48" y="52" width="24" height="58" fill="url(#giftRibbonGrad)" />
+                      <g className="gift-bow-group">
+                        <path d="M60 32 C45 12, 35 25, 60 32 Z" fill="url(#giftRibbonGrad)" stroke="#fbbf24" strokeWidth="1.5" />
+                        <path d="M60 32 C75 12, 85 25, 60 32 Z" fill="url(#giftRibbonGrad)" stroke="#fbbf24" strokeWidth="1.5" />
+                        <circle cx="60" cy="32" r="8" fill="#fbbf24" />
+                      </g>
+                    </svg>
+                  </div>
+                  <p className="gift-tap-label">Tap the Gift to Begin Your Birthday Surprise</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Music Request Glassmorphism Modal Popup */}
+          {showMusicPopup && (
+            <div className="music-popup-overlay">
+              <div className="music-popup-modal">
+                <h3 className="music-popup-title">🎵 One Small Request...</h3>
+                <p className="music-popup-message">
+                  "This birthday surprise is made to be experienced with music. Please start the music to unlock the magical journey."
+                </p>
+                <button 
+                  type="button" 
+                  className="music-popup-btn transition-all"
+                  onClick={handleStartMusicClick}
+                >
+                  ▶️ Start the Music
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Golden particles transition banner */}
+          {giftExploded && (
+            <div className="transition-overlay-banner">
+              <div className="explosion-glow" />
+              <h2 className="journey-begin-title">✨ Let the Birthday Journey Begin... ✨</h2>
+            </div>
+          )}
+        </div>
       )}
 
       {/* Welcome / Breathtaking Hero Landing Page Overlay */}
@@ -1116,9 +1385,11 @@ function App() {
               aria-label={isWelcomeMusicPlaying ? 'Stop Music' : 'Play Music'}
             >
               <span className="welcome-music-icon">
-                {getMusicIcon(isWelcomeMusicPlaying)}
+                {isWelcomeMusicPlaying ? '⏸️' : '▶️'}
               </span>
-              <span className="welcome-music-text" />
+              <span className="welcome-music-text">
+                {isWelcomeMusicPlaying ? 'Happy Birthday 🎵' : 'Music Stopped 🔇'}
+              </span>
             </button>
           </div>
 
