@@ -1546,6 +1546,7 @@
 .nav-links {
   display: flex;
   gap: 1.5rem;
+  align-items: center;
 }
 
 .nav-link {
@@ -2264,52 +2265,53 @@
     font-size: 1.8rem;
     margin-top: 1.8rem;
   }
-}
-
-
-/* Welcome Landing Page Floating Music Control Button */
-.welcome-music-container {
+}/* Premium Global Circular Music Control Button */
+.global-music-fixed-container {
   position: fixed;
   top: 24px;
   right: 24px;
-  z-index: 2100; /* above overlay */
+  z-index: 10100; /* stays visible above welcome-overlay (9999) */
 }
 
-.welcome-music-toggle-btn {
+.global-music-circle-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.75) 0%, rgba(219, 39, 119, 0.75) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1.5px solid rgba(223, 186, 107, 0.6);
-  border-radius: 30px;
-  padding: 10px 18px;
-  color: #be185d;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(219, 39, 119, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(219, 39, 119, 0.25), inset 0 2px 5px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform, box-shadow;
+  padding: 0;
+  margin: 0;
 }
 
-.welcome-music-toggle-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.9);
-  border-color: #d97706;
-  box-shadow: 0 10px 25px rgba(219, 39, 119, 0.25);
+.global-music-circle-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+  box-shadow: 0 12px 30px rgba(219, 39, 119, 0.45);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
-.welcome-music-toggle-btn.playing {
+.global-music-circle-btn.playing {
   animation: welcomeMusicPulse 2s infinite ease-in-out;
-  background: linear-gradient(135deg, rgba(253, 244, 245, 0.85) 0%, rgba(245, 235, 255, 0.85) 100%);
-  border-color: #db2777;
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.85) 0%, rgba(190, 24, 74, 0.85) 100%);
 }
 
-.welcome-music-icon {
-  font-size: 1.1rem;
+.global-music-icon-centered {
+  font-size: 1.4rem;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.global-music-circle-btn:active .global-music-icon-centered {
+  transform: scale(0.85);
 }
 
 @keyframes welcomeMusicPulse {
@@ -2319,13 +2321,16 @@
 }
 
 @media (max-width: 768px) {
-  .welcome-music-container {
+  .global-music-fixed-container {
     top: 16px;
     right: 16px;
   }
-  .welcome-music-toggle-btn {
-    padding: 8px 14px;
-    font-size: 0.85rem;
+  .global-music-circle-btn {
+    width: 46px;
+    height: 46px;
+  }
+  .global-music-icon-centered {
+    font-size: 1.25rem;
   }
 }
 

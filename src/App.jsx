@@ -480,10 +480,8 @@ function VideoCard({ url, title, comment, isFeatured = false }) {
 
 function App() {
   const [view, setView] = useState('intro') // State router: 'intro', 'welcome', 'journey', 'celebration'
-  const [isWelcomeMusicPlaying, setIsWelcomeMusicPlaying] = useState(false) // Play/Pause state for front page song
-  const [isJourneyMusicPlaying, setIsJourneyMusicPlaying] = useState(false) // Play/Pause state for second page song
-  const [currentCelebrationSong, setCurrentCelebrationSong] = useState('soniye') // 'soniye' or 'hath'
-  const [isCelebrationMusicPlaying, setIsCelebrationMusicPlaying] = useState(false) // Play/Pause state for third page sequence
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false) // Single global playback state
+  const [currentCelebrationSong, setCurrentCelebrationSong] = useState('soniye') // Track current celebration playlist song
   const [timelineCompleted, setTimelineCompleted] = useState(false) // Blocks celebration access until timeline is scrolled
   const [cakeCut, setCakeCut] = useState(false)
   const [showCelebrationSequence, setShowCelebrationSequence] = useState(false)
@@ -501,9 +499,10 @@ function App() {
   const [giftExploded, setGiftExploded] = useState(false)
   const [cursorTrail, setCursorTrail] = useState([])
 
-  const welcomeAudioRef = useRef(null)
-  const journeyAudioRef = useRef(null)
-  const celebrationAudioRef = useRef(null)
+  const audioRef = useRef(null)
+  if (!audioRef.current) {
+    audioRef.current = new Audio()
+  }
   
   const canvasRef = useRef(null)
   const observerRef = useRef(null)
@@ -593,196 +592,91 @@ function App() {
     return () => timeouts.forEach(clearTimeout)
   }, [view])
 
-  // Welcome Front Page Music Player Manager (Autoplay, Loop, and Navigation Cleanup)
+  // Single Global Audio State Sync Effect (Handles seamless song loading and autoplay transitions)
   useEffect(() => {
-    if (view === 'welcome' || view === 'intro') {
-      if (!welcomeAudioRef.current) {
-        const audio = new Audio('/Music/HappyBirthday.mp3')
+    const audio = audioRef.current
+    if (!audio) return
+
+    let targetSrc = ''
+    let shouldLoop = true
+
+    if (view === 'intro' || view === 'welcome') {
+      targetSrc = '/Music/HappyBirthday.mp3'
+      shouldLoop = true
+    } else if (view === 'journey') {
+      targetSrc = '/Music/YOUR THOUGHTS .mp3'
+      shouldLoop = true
+    } else if (view === 'celebration') {
+      // Retain Hath Fadke loop if already active
+      if (audio.src && audio.src.includes('Hathfadke.mp3')) {
+        targetSrc = '/Music/Hathfadke.mp3'
+        shouldLoop = true
+      } else {
+        targetSrc = '/Music/SoniyeBirthday.mp3'
+        shouldLoop = false
+      }
+    }
+
+    const currentSrc = audio.src ? new URL(audio.src, window.location.href).pathname : ''
+    const normalizedTarget = new URL(targetSrc, window.location.href).pathname
+
+    // Only switch source when target changes
+    if (currentSrc !== normalizedTarget) {
+      audio.pause()
+      audio.src = targetSrc
+      audio.load()
+    }
+
+    audio.loop = shouldLoop
+
+    // Handle song transitions (for Soniye Birthday -> Hath Fadke loop)
+    const handleEnded = () => {
+      if (view === 'celebration' && targetSrc === '/Music/SoniyeBirthday.mp3') {
+        audio.src = '/Music/Hathfadke.mp3'
         audio.loop = true
-        welcomeAudioRef.current = audio
-      }
-
-      if (isWelcomeMusicPlaying) {
-        welcomeAudioRef.current.play().catch((err) => {
-          console.log('Playback error/blocked:', err)
-          setIsWelcomeMusicPlaying(false)
-        })
-      }
-
-      return () => {
-        // Only stop and cleanup when navigating away from BOTH welcome and intro pages
-        if (view !== 'welcome' && view !== 'intro') {
-          if (welcomeAudioRef.current) {
-            welcomeAudioRef.current.pause()
-            welcomeAudioRef.current.src = ''
-            welcomeAudioRef.current = null
-          }
-          setIsWelcomeMusicPlaying(false)
-        }
-      }
-    } else {
-      if (welcomeAudioRef.current) {
-        welcomeAudioRef.current.pause()
-        welcomeAudioRef.current.src = ''
-        welcomeAudioRef.current = null
-      }
-      setIsWelcomeMusicPlaying(false)
-    }
-  }, [view, isWelcomeMusicPlaying])
-
-  // Journey Second Page Music Player Manager (Autoplay, Loop, and Navigation Cleanup)
-  useEffect(() => {
-    if (view === 'journey') {
-      const audio = new Audio('/Music/YOUR THOUGHTS .mp3')
-      audio.loop = true
-      journeyAudioRef.current = audio
-
-      // Autoplay attempt
-      audio.play()
-        .then(() => {
-          setIsJourneyMusicPlaying(true)
-        })
-        .catch((err) => {
-          console.log('Journey autoplay blocked by browser. User interaction needed.', err)
-          setIsJourneyMusicPlaying(false)
-        })
-
-      return () => {
-        audio.pause()
-        audio.src = ''
-        journeyAudioRef.current = null
-        setIsJourneyMusicPlaying(false)
-      }
-    } else {
-      if (journeyAudioRef.current) {
-        journeyAudioRef.current.pause()
-        journeyAudioRef.current.src = ''
-        journeyAudioRef.current = null
-      }
-      setIsJourneyMusicPlaying(false)
-    }
-  }, [view])
-
-  // Celebration Third Page Music Sequence (Soniye Birthday -> Hath Fadke Loop)
-  useEffect(() => {
-    if (view === 'celebration') {
-      setCurrentCelebrationSong('soniye')
-      
-      const audio = new Audio('/Music/SoniyeBirthday.mp3')
-      audio.loop = false
-      celebrationAudioRef.current = audio
-
-      // Callback to automatically play Hath Fadke and loop it when Soniye finishes
-      const handleEnded = () => {
-        audio.pause()
-        audio.removeEventListener('ended', handleEnded)
-
-        const nextAudio = new Audio('/Music/Hathfadke.mp3')
-        nextAudio.loop = true
-        celebrationAudioRef.current = nextAudio
+        audio.load()
         setCurrentCelebrationSong('hath')
-
-        nextAudio.play()
-          .then(() => {
-            setIsCelebrationMusicPlaying(true)
-          })
-          .catch((err) => {
-            console.log('Hathfadke playback blocked:', err)
-            setIsCelebrationMusicPlaying(false)
-          })
-      }
-
-      audio.addEventListener('ended', handleEnded)
-
-      // Start first song in sequence
-      audio.play()
-        .then(() => {
-          setIsCelebrationMusicPlaying(true)
-        })
-        .catch((err) => {
-          console.log('Soniye Birthday playback blocked:', err)
-          setIsCelebrationMusicPlaying(false)
-        })
-
-      return () => {
-        audio.removeEventListener('ended', handleEnded)
-        if (celebrationAudioRef.current) {
-          celebrationAudioRef.current.pause()
-          celebrationAudioRef.current.src = ''
+        if (isMusicPlaying) {
+          audio.play().catch((err) => console.log('Ended transition play error:', err))
         }
-        celebrationAudioRef.current = null
-        setIsCelebrationMusicPlaying(false)
-        setCurrentCelebrationSong('soniye')
       }
+    }
+
+    audio.addEventListener('ended', handleEnded)
+
+    if (isMusicPlaying) {
+      audio.play().catch((err) => {
+        console.log('Audio playback blocked or interrupted:', err)
+        setIsMusicPlaying(false)
+      })
     } else {
-      if (celebrationAudioRef.current) {
-        celebrationAudioRef.current.pause()
-        celebrationAudioRef.current.src = ''
-        celebrationAudioRef.current = null
-      }
-      setIsCelebrationMusicPlaying(false)
-      setCurrentCelebrationSong('soniye')
+      audio.pause()
     }
-  }, [view])
 
-  // Play/Pause toggle handler for front page
-  const toggleWelcomeMusic = () => {
-    if (welcomeAudioRef.current) {
-      if (isWelcomeMusicPlaying) {
-        welcomeAudioRef.current.pause()
-        setIsWelcomeMusicPlaying(false)
-      } else {
-        welcomeAudioRef.current.play()
-          .then(() => {
-            setIsWelcomeMusicPlaying(true)
-          })
-          .catch((err) => console.log('Playback error:', err))
-      }
+    return () => {
+      audio.removeEventListener('ended', handleEnded)
     }
-  }
+  }, [view, isMusicPlaying])
 
-  // Play/Pause toggle handler for Journey timeline page
-  const toggleJourneyMusic = () => {
-    if (journeyAudioRef.current) {
-      if (isJourneyMusicPlaying) {
-        journeyAudioRef.current.pause()
-        setIsJourneyMusicPlaying(false)
-      } else {
-        journeyAudioRef.current.play()
-          .then(() => {
-            setIsJourneyMusicPlaying(true)
-          })
-          .catch((err) => console.log('Playback error:', err))
+  // Clean up global audio resource completely on unmount to prevent leaks
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+        audioRef.current = null
       }
     }
-  }
+  }, [])
 
-  // Play/Pause toggle handler for Celebration cake page
-  const toggleCelebrationMusic = () => {
-    if (celebrationAudioRef.current) {
-      if (isCelebrationMusicPlaying) {
-        celebrationAudioRef.current.pause()
-        setIsCelebrationMusicPlaying(false)
-      } else {
-        celebrationAudioRef.current.play()
-          .then(() => {
-            setIsCelebrationMusicPlaying(true)
-          })
-          .catch((err) => console.log('Playback error:', err))
-      }
-    }
+  // Unified global play/pause toggle
+  const toggleMusic = () => {
+    setIsMusicPlaying((prev) => !prev)
   }
 
   // Start Surprise Website (Goes to photo timeline)
   const startJourney = () => {
     setView('journey')
-    // Stop the landing page birthday music on transition
-    if (welcomeAudioRef.current) {
-      welcomeAudioRef.current.pause()
-      welcomeAudioRef.current.src = ''
-      welcomeAudioRef.current = null
-    }
-    setIsWelcomeMusicPlaying(false)
   }
 
   // Scroll Animations Handler (Optimized: unobserves once animated to free memory)
@@ -1096,7 +990,7 @@ function App() {
   const handleStartMusicClick = () => {
     setShowMusicPopup(false)
     setGiftExploded(true)
-    setIsWelcomeMusicPlaying(true)
+    setIsMusicPlaying(true)
 
     // Trigger canvas explosion
     if (window.triggerBurst) {
@@ -1131,7 +1025,24 @@ function App() {
         ))}
       </div>
 
-      {/* Premium Navigation Header (Silent pages - no music player except when on timeline or celebration page) */}
+      {/* On welcome page, render floating music button in top-right */}
+      {view === 'welcome' && (
+        <div className="global-music-fixed-container">
+          <button
+            type="button"
+            className={`global-music-circle-btn ${isMusicPlaying ? 'playing' : ''}`}
+            onClick={toggleMusic}
+            title={isMusicPlaying ? 'Pause Music' : 'Play Music'}
+            aria-label={isMusicPlaying ? 'Pause Music' : 'Play Music'}
+          >
+            <span className="global-music-icon-centered">
+              {isMusicPlaying ? '🎵' : '⏸️'}
+            </span>
+          </button>
+        </div>
+      )}
+
+      {/* Premium Navigation Header (Includes perfectly aligned circular music control) */}
       {view !== 'welcome' && view !== 'intro' && (
         <nav className="glass-nav">
           <div className="nav-container">
@@ -1149,43 +1060,18 @@ function App() {
               >
                 {timelineCompleted ? '🎂 Celebration' : '🔒 Celebration'}
               </button>
+              <button
+                type="button"
+                className={`global-music-circle-btn ${isMusicPlaying ? 'playing' : ''}`}
+                onClick={toggleMusic}
+                title={isMusicPlaying ? 'Pause Music' : 'Play Music'}
+                aria-label={isMusicPlaying ? 'Pause Music' : 'Play Music'}
+              >
+                <span className="global-music-icon-centered">
+                  {isMusicPlaying ? '🎵' : '⏸️'}
+                </span>
+              </button>
             </div>
-            
-            {/* Render Timeline Music control ONLY on journey page */}
-            {view === 'journey' && (
-              <div className="music-control-nav">
-                <button
-                  type="button"
-                  className={`music-btn transition-all ${isJourneyMusicPlaying ? 'playing' : ''}`}
-                  onClick={toggleJourneyMusic}
-                  title={isJourneyMusicPlaying ? 'Stop Timeline Music' : 'Play Timeline Music'}
-                  aria-label={isJourneyMusicPlaying ? 'Stop Timeline Music' : 'Play Timeline Music'}
-                >
-                  <span className="music-icon">{isJourneyMusicPlaying ? '⏸️' : '▶️'}</span>
-                  <span className="music-text">{isJourneyMusicPlaying ? 'Your Thoughts 🎵' : 'Music Stopped 🔇'}</span>
-                </button>
-              </div>
-            )}
-
-            {/* Render Celebration Playlist control ONLY on celebration page */}
-            {view === 'celebration' && (
-              <div className="music-control-nav">
-                <button
-                  type="button"
-                  className={`music-btn transition-all ${isCelebrationMusicPlaying ? 'playing' : ''}`}
-                  onClick={toggleCelebrationMusic}
-                  title={isCelebrationMusicPlaying ? 'Stop Celebration Music' : 'Play Celebration Music'}
-                  aria-label={isCelebrationMusicPlaying ? 'Stop Celebration Music' : 'Play Celebration Music'}
-                >
-                  <span className="music-icon">{isCelebrationMusicPlaying ? '⏸️' : '▶️'}</span>
-                  <span className="music-text">
-                    {isCelebrationMusicPlaying 
-                      ? (currentCelebrationSong === 'soniye' ? 'Soniye Birthday 🎵' : 'Hath Fadke 🎵') 
-                      : 'Music Stopped 🔇'}
-                  </span>
-                </button>
-              </div>
-            )}
           </div>
         </nav>
       )}
@@ -1250,7 +1136,7 @@ function App() {
             </span>
           ))}
 
-          {/* Cinematic Parallax Cosmic Backdrop Glow */}
+          {/* Parallax Cosmic Backdrop Glow */}
           <div className="intro-bg-glow" />
 
           {/* Main Cinematic Text Content */}
@@ -1375,24 +1261,6 @@ function App() {
       {/* Welcome / Breathtaking Hero Landing Page Overlay */}
       {view === 'welcome' && (
         <div className="welcome-overlay">
-          {/* Floating Music Control Button in Visible Corner */}
-          <div className="welcome-music-container">
-            <button
-              type="button"
-              className={`welcome-music-toggle-btn ${isWelcomeMusicPlaying ? 'playing' : ''}`}
-              onClick={toggleWelcomeMusic}
-              title={isWelcomeMusicPlaying ? 'Stop Music' : 'Play Music'}
-              aria-label={isWelcomeMusicPlaying ? 'Stop Music' : 'Play Music'}
-            >
-              <span className="welcome-music-icon">
-                {isWelcomeMusicPlaying ? '⏸️' : '▶️'}
-              </span>
-              <span className="welcome-music-text">
-                {isWelcomeMusicPlaying ? 'Happy Birthday 🎵' : 'Music Stopped 🔇'}
-              </span>
-            </button>
-          </div>
-
           <div className="hero-landing-layout">
             
             {/* Left Media Side: Photo frame, backlight glow, glass card, mini cake */}
