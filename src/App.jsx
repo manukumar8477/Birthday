@@ -184,12 +184,6 @@ const LATEST_PHOTOS = [
     age: 'Latest' 
   },
   { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.31 (1).jpeg', 
-    compliment: 'Every year you became more amazing 🌸', 
-    comment: 'An amazing soul who brings brightness and warmth into our lives. 🌸',
-    age: 'Latest' 
-  },
-  { 
     url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.31 (2).jpeg', 
     compliment: 'Radiating beauty and style 👑', 
     comment: 'A modern queen carrying her grace with effortless elegance. 👑', 
@@ -232,21 +226,9 @@ const LATEST_PHOTOS = [
     age: 'Latest' 
   },
   { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.33.jpeg', 
-    compliment: 'Radiant and beautiful smile 🌸', 
-    comment: 'Your beautiful smile continues to be the warmest light we know. 🌸', 
-    age: 'Latest' 
-  },
-  { 
     url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.34 (1).jpeg', 
     compliment: 'Absolutely captivating 🌹', 
     comment: 'Capturing a moment of pure bliss, style, and magnetic elegance. 🌹', 
-    age: 'Latest' 
-  },
-  { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.34.jpeg', 
-    compliment: 'Your smile lights up everything 💖', 
-    comment: 'Your magical smile continues to be the brightest light we know. 💖',
     age: 'Latest' 
   },
   { 
@@ -280,24 +262,6 @@ const LATEST_PHOTOS = [
     age: 'Latest' 
   },
   { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.37 (1).jpeg', 
-    compliment: 'Grace, beauty and kindness in one frame 👑', 
-    comment: 'A true visual masterpiece, reflecting a heart filled with gold. 🌟',
-    age: 'Latest' 
-  },
-  { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.37 (2).jpeg', 
-    compliment: 'Positivity and light ✨', 
-    comment: 'Your bright light makes the world a much warmer place. ✨', 
-    age: 'Latest' 
-  },
-  { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.37.jpeg', 
-    compliment: 'Absolutely stunning and beautiful 🌹', 
-    comment: 'Classic beauty with an unforgettable, sparkling personality. 💐',
-    age: 'Latest' 
-  },
-  { 
     url: '/Photos/WhatsApp Image 2026-07-04 at 17.45.38 (1).jpeg', 
     compliment: 'Stunning and beautiful smile 👑', 
     comment: 'A smile that makes everything around you look absolutely magical. 👑', 
@@ -313,12 +277,6 @@ const LATEST_PHOTOS = [
     url: '/Photos/WhatsApp Image 2026-07-04 at 17.46.47.jpeg', 
     compliment: 'Absolutely breathtaking 💖', 
     comment: 'Every memory with you is a gift of pure joy and happiness. 💖', 
-    age: 'Latest' 
-  },
-  { 
-    url: '/Photos/WhatsApp Image 2026-07-04 at 17.47.57.jpeg', 
-    compliment: 'Your smile lights up everything 💖', 
-    comment: 'An absolute queen of smiles, spreading kindness with each gaze. 👑',
     age: 'Latest' 
   },
   { 
