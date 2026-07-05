@@ -1384,7 +1384,7 @@ function App() {
               </p>
               
               <div className="sohniye-dua-block">
-                <span className="dua-intro-label">Bas ikk hi dua ae... ✨</span>
+                <span className="dua-intro-label">Bas ikk hi dua ae</span>
                 <p className="dua-content-text">
                   Rabb tenu hamesha hasda vasda rakhe, har supna tera poora hove, 
                   te teri zindagi vich kade kise cheez di kami na aave.
