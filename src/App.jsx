@@ -1396,7 +1396,8 @@ function App() {
               </p>
 
               <h3 className="sohniye-signoff">
-                Janamdin dian lakh lakh vadhaiyan, meri sohni muskaan. ❤️🎉
+                Janamdin dian lakh lakh vadhaiyan, Pagal Si.  
+                <br />❤️🎉
               </h3>
             </div>
           </div>
@@ -1562,7 +1563,7 @@ function App() {
                 <span className="message-heart" aria-hidden="true">❤️</span>
                 <h2 className="message-title">Happy Birthday Kaifreen</h2>
                 <p className="message-body">
-                  Wishing you endless happiness, success, love, and beautiful memories.
+                  WaheGuru give you endless happiness, success, love, and beautiful memories.
                   Keep smiling because your smile is truly magical.
                   May this year bring everything you dream of.
                 </p>
@@ -1696,10 +1697,11 @@ function App() {
                   <div className="wax-seal">💖</div>
                   
                   <div className="letter-header">
-                    <span className="letter-salutation">Dearest Kaifreen, 🌹</span>
+                    <span className="letter-salutation">Dearest Kaifreen, </span>
                   </div>
                   
                   <div className="letter-body">
+                    <h2>Today, the universe celebrates its most beautiful masterpiece — You. Happy Birthday! 🎂❤️</h2>
                     <p>
                       Tumhari maujoodgi is duniya mein ek khoobsurat roshni ki tarah hai,
                       aur tumhari woh pyari si muskaan har din ko khaas bana deti hai.
@@ -1722,13 +1724,15 @@ function App() {
                     
                     <p className="letter-closing">
                       Tumhare saare sapne chahe chhote hon ya bade zaroor poore hon.
-                      Tum hamesha aise hi muskurati raho, khush raho, aur apni roshni se sabki zindagi khoobsurat banati raho. 🌟
+                      Tum hamesha aise hi muskurati raho, khush raho, aur apni roshni se sabki zindagi khoobsurat banati raho. 
                     </p>
+                    <h2>WaheGuru give you a lifetime of happiness, a heart full of love, and a future brighter than the stars.</h2>
                   </div>
 
                   <div className="letter-footer">
-                    <p className="footer-label">With all my love & warmest wishes,</p>
-                    <p className="footer-signature">Happy Birthday! 🎂✨</p>
+                    <p className="footer-label">With love & warmest wishes,</p>
+                    <p className="footer-signature">Happy Birthday! </p>
+                    <h1>🎂✨</h1>
                   </div>
                 </div>
               </div>
