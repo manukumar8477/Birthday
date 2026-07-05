@@ -478,6 +478,8 @@ function VideoCard({ url, title, comment, isFeatured = false }) {
   )
 }
 
+const getMusicIcon = (isPlaying) => (isPlaying ? '🎵' : '▶️')
+
 function App() {
   const [view, setView] = useState('welcome') // State router: 'welcome', 'journey', 'celebration'
   const [isWelcomeMusicPlaying, setIsWelcomeMusicPlaying] = useState(false) // Play/Pause state for front page song
@@ -774,19 +776,36 @@ function App() {
     }
   }, [view])
 
-  // Scheduler: Birthday message parade for 30 seconds after cake cutting
+  // Scheduler: Birthday message parade for 45 seconds after cake cutting
   useEffect(() => {
     if (!showCelebrationSequence) return
 
     const messagesList = [
-      "Happy Birthday Kaifreen ❤️",
-      "Wishing You Endless Happiness ✨",
-      "May All Your Dreams Come True 💖",
-      "You Are Truly Special 🌸",
-      "Tumhari smile bahut sohni aa 💕",
-      "Tu bahut hi special te beautiful aa 👑",
-      "Happy Birthday Kaifreen Chauhan 🎂✨",
-      "A day to celebrate the most beautiful girl 🌹"
+      "Janamdin dian lakh lakh vadhaiyan! ❤️",
+      "Rabb hamesha tenu khush rakhe. 🌸",
+      "Teri muskaan hamesha chamkdi rahe. ✨",
+      "Teri har dua kabool hove. 🤲",
+      "Har din tere layi khas hove. 💖",
+      "Khushiyan tere kadman nu chumdiyan rahn. 🌺",
+      "Rab tere supne poore kare. 🌟",
+      "Teri zindagi pyar naal bhari rahe. 💕",
+      "Teri hasi sab ton sohni ae. 😊",
+      "Har pal yaadgaar ban jave. 🎉",
+      "Rabb di rehmat sada tere naal rahe. ❤️",
+      "Teri har manzil asaan hove. 🌈",
+      "Har nava savera khushiyan leke aave. ☀️",
+      "Tera dil hamesha muskraunda rahe. 💝",
+      "Teri zindagi phullan wang mehkdi rahe. 🌹",
+      "Har ichha poori hove. ✨",
+      "Tera har kadam kamyabi wal vadhe. 🏆",
+      "Tu hamesha ehve hi pyari lagdi rahe. 💖",
+      "Teri hasi kade na mukke. 😊",
+      "Rab tenu buri nazar ton bachave. 🧿",
+      "Khushiyan tere naal hamesha rehna. 💫",
+      "Har saal hor vi sohna hove. 🎂",
+      "Ajj da din sirf tera ae. 🥳",
+      "Smile... Ajj tera birthday ae! ❤️",
+      "Rabb tenu lambi umar deve. 🌸"
     ]
     const animationStyles = ['zoom-fade', 'float-up', 'glow-shimmer', 'bounce-in', 'slide-right', 'scale-glow']
     const colorsList = ['#ff4d6d', '#fbbf24', '#a855f7', '#db2777', '#c084fc', '#ffffff', '#f43f5e', '#ffd700']
@@ -821,7 +840,7 @@ function App() {
       clearInterval(interval)
       setShowCelebrationSequence(false)
       setLetterRevealed(true)
-    }, 30000)
+    }, 45000)
 
     return () => {
       clearInterval(interval)
@@ -1059,8 +1078,8 @@ function App() {
                   title={isJourneyMusicPlaying ? 'Stop Timeline Music' : 'Play Timeline Music'}
                   aria-label={isJourneyMusicPlaying ? 'Stop Timeline Music' : 'Play Timeline Music'}
                 >
-                  <span className="music-icon">{isJourneyMusicPlaying ? '⏸️' : '▶️'}</span>
-                  <span className="music-text">{isJourneyMusicPlaying ? 'Your Thoughts 🎵' : 'Music Stopped 🔇'}</span>
+                  <span className="music-icon">{getMusicIcon(isJourneyMusicPlaying)}</span>
+                  <span className="music-text" />
                 </button>
               </div>
             )}
@@ -1075,12 +1094,8 @@ function App() {
                   title={isCelebrationMusicPlaying ? 'Stop Celebration Music' : 'Play Celebration Music'}
                   aria-label={isCelebrationMusicPlaying ? 'Stop Celebration Music' : 'Play Celebration Music'}
                 >
-                  <span className="music-icon">{isCelebrationMusicPlaying ? '⏸️' : '▶️'}</span>
-                  <span className="music-text">
-                    {isCelebrationMusicPlaying 
-                      ? (currentCelebrationSong === 'soniye' ? 'Soniye Birthday 🎵' : 'Hath Fadke 🎵') 
-                      : 'Music Stopped 🔇'}
-                  </span>
+                  <span className="music-icon">{getMusicIcon(isCelebrationMusicPlaying)}</span>
+                  <span className="music-text" />
                 </button>
               </div>
             )}
@@ -1101,11 +1116,9 @@ function App() {
               aria-label={isWelcomeMusicPlaying ? 'Stop Music' : 'Play Music'}
             >
               <span className="welcome-music-icon">
-                {isWelcomeMusicPlaying ? '⏸️' : '▶️'}
+                {getMusicIcon(isWelcomeMusicPlaying)}
               </span>
-              <span className="welcome-music-text">
-                {isWelcomeMusicPlaying ? 'Happy Birthday 🎵' : 'Music Stopped 🔇'}
-              </span>
+              <span className="welcome-music-text" />
             </button>
           </div>
 
