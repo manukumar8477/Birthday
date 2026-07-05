@@ -1025,8 +1025,8 @@ function App() {
         ))}
       </div>
 
-      {/* On welcome page, render floating music button in top-right */}
-      {view === 'welcome' && (
+      {/* Floating Music Button — visible on all pages except intro */}
+      {view !== 'intro' && (
         <div className="global-music-fixed-container">
           <button
             type="button"
@@ -1042,7 +1042,7 @@ function App() {
         </div>
       )}
 
-      {/* Premium Navigation Header (Includes perfectly aligned circular music control) */}
+      {/* Premium Navigation Header */}
       {view !== 'welcome' && view !== 'intro' && (
         <nav className="glass-nav">
           <div className="nav-container">
@@ -1059,17 +1059,6 @@ function App() {
                 className={`nav-link ${view === 'celebration' ? 'active' : ''} ${!timelineCompleted ? 'locked' : ''}`}
               >
                 {timelineCompleted ? '🎂 Celebration' : '🔒 Celebration'}
-              </button>
-              <button
-                type="button"
-                className={`global-music-circle-btn ${isMusicPlaying ? 'playing' : ''}`}
-                onClick={toggleMusic}
-                title={isMusicPlaying ? 'Pause Music' : 'Play Music'}
-                aria-label={isMusicPlaying ? 'Pause Music' : 'Play Music'}
-              >
-                <span className="global-music-icon-centered">
-                  {isMusicPlaying ? '🎵' : '⏸️'}
-                </span>
               </button>
             </div>
           </div>
@@ -1425,7 +1414,6 @@ function App() {
                     </div>
 
                     <article className="photo-card">
-                      <span className="card-era-badge">{photo.age}</span>
                       <div className="photo-card-inner">
                         <img src={photo.url} alt={`Kaifreen in ${photo.age}`} loading="lazy" decoding="async" />
                         <div className="compliment-overlay">
@@ -1457,7 +1445,6 @@ function App() {
                     </div>
 
                     <article className="photo-card">
-                      <span className="card-era-badge">{photo.age}</span>
                       <div className="photo-card-inner">
                         <img src={photo.url} alt={`Kaifreen in ${photo.age}`} loading="lazy" decoding="async" />
                         <div className="compliment-overlay">
@@ -1489,7 +1476,6 @@ function App() {
                     </div>
 
                     <article className="photo-card">
-                      <span className="card-era-badge">{photo.age}</span>
                       <div className="photo-card-inner">
                         <img src={photo.url} alt={`Kaifreen recently`} loading="lazy" decoding="async" />
                         <div className="compliment-overlay">

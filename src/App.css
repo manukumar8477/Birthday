@@ -2044,10 +2044,14 @@
 
 .celebration-floating-message {
   pointer-events: none;
-  white-space: nowrap;
+  white-space: normal;           /* allow wrapping on small screens */
+  word-break: break-word;
   font-weight: 700;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  line-height: 1.5;
+  max-width: 88vw;               /* never overflow the screen */
+  padding: 0 1rem;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 2px rgba(0,0,0,0.6);
   animation: simpleAppear 4.5s forwards ease-in-out;
 }
 
@@ -2061,6 +2065,14 @@
   15%  { opacity: 1; transform: translate3d(-50%, -50%, 0); }
   80%  { opacity: 1; transform: translate3d(-50%, -50%, 0); }
   100% { opacity: 0; transform: translate3d(-50%, -50%, 0); }
+}
+
+/* Mobile: bigger font for the celebration messages */
+@media (max-width: 480px) {
+  .celebration-floating-message {
+    font-size: clamp(1.1rem, 4.5vw, 1.5rem) !important;
+    max-width: 92vw;
+  }
 }
 
 /* Punjabi Blessing Section & Sohniye Letter Card Styles */
@@ -2210,22 +2222,22 @@
 }/* Premium Global Circular Music Control Button */
 .global-music-fixed-container {
   position: fixed;
-  top: 24px;
-  right: 24px;
-  z-index: 10100; /* stays visible above welcome-overlay (9999) */
+  bottom: 28px;
+  right: 28px;
+  z-index: 10100; /* above welcome-overlay (9999) and glass-nav (1000) */
 }
 
 .global-music-circle-btn {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(251, 113, 133, 0.75) 0%, rgba(219, 39, 119, 0.75) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.85) 0%, rgba(219, 39, 119, 0.85) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.65);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 25px rgba(219, 39, 119, 0.25), inset 0 2px 5px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(219, 39, 119, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -2236,13 +2248,13 @@
 
 .global-music-circle-btn:hover {
   transform: scale(1.1) rotate(15deg);
-  box-shadow: 0 12px 30px rgba(219, 39, 119, 0.45);
-  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 30px rgba(219, 39, 119, 0.55);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 .global-music-circle-btn.playing {
   animation: welcomeMusicPulse 2s infinite ease-in-out;
-  background: linear-gradient(135deg, rgba(244, 63, 94, 0.85) 0%, rgba(190, 24, 74, 0.85) 100%);
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.9) 0%, rgba(190, 24, 74, 0.9) 100%);
 }
 
 .global-music-icon-centered {
@@ -2257,22 +2269,24 @@
 }
 
 @keyframes welcomeMusicPulse {
-  0% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.4); }
-  70% { box-shadow: 0 0 0 12px rgba(219, 39, 119, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0.5); }
+  70% { box-shadow: 0 0 0 14px rgba(219, 39, 119, 0); }
   100% { box-shadow: 0 0 0 0 rgba(219, 39, 119, 0); }
 }
 
 @media (max-width: 768px) {
+  /* On mobile: consistent bottom-right position */
   .global-music-fixed-container {
-    top: 16px;
+    bottom: 20px;
     right: 16px;
   }
   .global-music-circle-btn {
-    width: 46px;
-    height: 46px;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 4px 16px rgba(219, 39, 119, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
   }
   .global-music-icon-centered {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
   }
 }
 
