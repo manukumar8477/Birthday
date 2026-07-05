@@ -1046,7 +1046,7 @@ function App() {
       {view !== 'welcome' && view !== 'intro' && (
         <nav className="glass-nav">
           <div className="nav-container">
-            <span className="nav-logo" onClick={() => setView('welcome')}>Kaifreen 💖</span>
+            <span className="nav-logo" onClick={() => setView('welcome')}>Kaifreen</span>
             <div className="nav-links">
               <button 
                 onClick={() => { setView('journey'); window.scrollTo(0,0); }} 
@@ -1284,15 +1284,15 @@ function App() {
                   <svg width="140" height="160" viewBox="0 0 240 280" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <ellipse cx="120" cy="245" rx="100" ry="15" fill="#e5e7eb" stroke="#d1d5db" strokeWidth="3" />
                     <path d="M50 245 L70 270 H170 L190 245 Z" fill="#d1d5db" />
-                    <rect x="40" y="160" width="160" height="75" rx="15" fill="#fbcfe8" />
-                    <ellipse cx="120" cy="160" rx="80" ry="10" fill="#f9a8d4" />
-                    <ellipse cx="120" cy="235" rx="80" ry="10" fill="#fbcfe8" />
-                    <path d="M40 160 C 50 175, 60 175, 70 160 C 80 180, 90 180, 100 160 C 110 170, 120 170, 130 160 C 140 178, 150 178, 160 160 C 170 170, 180 170, 190 160 C 195 170, 200 165, 200 160" fill="none" stroke="#db2777" strokeWidth="8" strokeLinecap="round" />
-                    <rect x="65" y="95" width="110" height="60" rx="12" fill="#faf5ff" />
-                    <ellipse cx="120" cy="95" rx="55" ry="8" fill="#f3e8ff" />
-                    <ellipse cx="120" cy="155" rx="55" ry="8" fill="#faf5ff" />
-                    <path d="M65 95 C 75 105, 85 105, 95 95 C 105 110, 115 110, 125 95 C 135 105, 145 105, 155 95 C 165 108, 170 100, 175 95" fill="none" stroke="#c084fc" strokeWidth="6" strokeLinecap="round" />
-                    <rect x="116" y="50" width="8" height="40" rx="2" fill="#60a5fa" />
+                    <rect x="40" y="160" width="160" height="75" rx="15" fill="#fbbf24" stroke="#d97706" strokeWidth="1.5" />
+                    <ellipse cx="120" cy="160" rx="80" ry="10" fill="#fef3c7" />
+                    <ellipse cx="120" cy="235" rx="80" ry="10" fill="#fbbf24" opacity="0.3" />
+                    <path d="M40 160 C 50 175, 60 175, 70 160 C 80 180, 90 180, 100 160 C 110 170, 120 170, 130 160 C 140 178, 150 178, 160 160 C 170 170, 180 170, 190 160 C 195 170, 200 165, 200 160" fill="none" stroke="#fee2e2" strokeWidth="8" strokeLinecap="round" />
+                    <rect x="65" y="95" width="110" height="60" rx="12" fill="#ef4444" stroke="#b91c1c" strokeWidth="1.5" />
+                    <ellipse cx="120" cy="95" rx="55" ry="8" fill="#fee2e2" />
+                    <ellipse cx="120" cy="155" rx="55" ry="8" fill="#ef4444" opacity="0.3" />
+                    <path d="M65 95 C 75 105, 85 105, 95 95 C 105 110, 115 110, 125 95 C 135 105, 145 105, 155 95 C 165 108, 170 100, 175 95" fill="none" stroke="#fcd34d" strokeWidth="6" strokeLinecap="round" />
+                    <rect x="116" y="50" width="8" height="40" rx="2" fill="#34d399" />
                     <line x1="120" y1="50" x2="120" y2="43" stroke="#374151" strokeWidth="2" />
                     <path className="candle-flame" d="M120 30 C116 38 124 38 120 30 Z" fill="#f97316" style={{ animation: 'candleFlicker 0.4s infinite ease-in-out', transformOrigin: '120px 43px' }} />
                   </svg>
@@ -1371,7 +1371,7 @@ function App() {
                 <span className="card-decoration-item dec-heart-2">💖</span>
               </div>
               
-              <h2 className="sohniye-title">Happy Birthday, Sohniye ❤️🎂</h2>
+              <h2 className="sohniye-title">Happy Birthday, Sohniye 🎂</h2>
               
               <p className="sohniye-line-highlight">
                 Rabb kare teri zindagi hamesha khushiyan naal bhari rahe.
@@ -1610,14 +1610,14 @@ function App() {
 
                   <g className="main-cake-body">
                     <rect x="50" y="170" width="180" height="85" rx="18" fill="url(#bottomTierGrad)" />
-                    <ellipse cx="140" cy="170" rx="90" ry="15" fill="#f472b6" />
-                    <ellipse cx="140" cy="255" rx="90" ry="15" fill="#db2777" opacity="0.2" />
-                    <path d="M50 170 C 65 190, 80 190, 95 170 C 110 195, 125 195, 140 170 C 155 190, 170 190, 185 170 C 200 195, 215 195, 230 170" fill="none" stroke="#db2777" strokeWidth="8" strokeLinecap="round" />
+                    <ellipse cx="140" cy="170" rx="90" ry="15" fill="#fef08a" />
+                    <ellipse cx="140" cy="255" rx="90" ry="15" fill="#d97706" opacity="0.2" />
+                    <path d="M50 170 C 65 190, 80 190, 95 170 C 110 195, 125 195, 140 170 C 155 190, 170 190, 185 170 C 200 195, 215 195, 230 170" fill="none" stroke="#fee2e2" strokeWidth="8" strokeLinecap="round" />
 
                     <rect x="75" y="100" width="130" height="70" rx="14" fill="url(#topTierGrad)" />
-                    <ellipse cx="140" cy="100" rx="65" ry="12" fill="#faf5ff" />
-                    <ellipse cx="140" cy="170" rx="65" ry="12" fill="#faf5ff" opacity="0.1" />
-                    <path d="M75 100 C 85 112, 95 112, 105 100 C 115 118, 125 118, 135 100 C 145 112, 155 112, 165 100 C 175 118, 185 118, 205 100" fill="none" stroke="#c084fc" strokeWidth="6" strokeLinecap="round" />
+                    <ellipse cx="140" cy="100" rx="65" ry="12" fill="#fee2e2" />
+                    <ellipse cx="140" cy="170" rx="65" ry="12" fill="#b91c1c" opacity="0.1" />
+                    <path d="M75 100 C 85 112, 95 112, 105 100 C 115 118, 125 118, 135 100 C 145 112, 155 112, 165 100 C 175 118, 185 118, 205 100" fill="none" stroke="#fcd34d" strokeWidth="6" strokeLinecap="round" />
 
                     <circle cx="95" cy="130" r="4" fill="#fbbf24" />
                     <circle cx="120" cy="145" r="4" fill="#60a5fa" />
@@ -1629,7 +1629,7 @@ function App() {
                   <g className={`cake-slice-wedge-group ${cakeCut ? 'slide-out' : ''}`}>
                     <path d="M140 170 L210 190 L210 255 L140 235 Z" fill="url(#sliceSideGrad)" opacity={cakeCut ? 1 : 0} />
                     <path d="M140 170 L140 235 L70 255 L70 190 Z" fill="url(#sliceInnerGrad)" opacity={cakeCut ? 1 : 0} />
-                    <path d="M140 170 C 160 175, 190 185, 210 190 L210 255 C 190 250, 160 240, 140 235 Z" fill="#db2777" opacity={cakeCut ? 0.35 : 0} />
+                    <path d="M140 170 C 160 175, 190 185, 210 190 L210 255 C 190 250, 160 240, 140 235 Z" fill="#b91c1c" opacity={cakeCut ? 0.35 : 0} />
                   </g>
 
                   <g className="cake-candles">
@@ -1654,26 +1654,26 @@ function App() {
 
                   <defs>
                     <linearGradient id="plateGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#faf5ff" />
-                      <stop offset="100%" stopColor="#c084fc" />
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#fbbf24" />
                     </linearGradient>
                     <linearGradient id="bottomTierGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#db2777" />
-                      <stop offset="50%" stopColor="#fbcfe8" />
-                      <stop offset="100%" stopColor="#db2777" />
+                      <stop offset="0%" stopColor="#b45309" />
+                      <stop offset="50%" stopColor="#fef3c7" />
+                      <stop offset="100%" stopColor="#b45309" />
                     </linearGradient>
                     <linearGradient id="topTierGrad" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#7e22ce" />
-                      <stop offset="50%" stopColor="#f3e8ff" />
-                      <stop offset="100%" stopColor="#7e22ce" />
+                      <stop offset="0%" stopColor="#b91c1c" />
+                      <stop offset="50%" stopColor="#fca5a5" />
+                      <stop offset="100%" stopColor="#b91c1c" />
                     </linearGradient>
                     <linearGradient id="sliceSideGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#f472b6" />
-                      <stop offset="100%" stopColor="#db2777" />
+                      <stop offset="0%" stopColor="#ef4444" />
+                      <stop offset="100%" stopColor="#b91c1c" />
                     </linearGradient>
                     <linearGradient id="sliceInnerGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#fbcfe8" />
-                      <stop offset="100%" stopColor="#f472b6" />
+                      <stop offset="0%" stopColor="#fef3c7" />
+                      <stop offset="100%" stopColor="#fbbf24" />
                     </linearGradient>
                   </defs>
                 </svg>
